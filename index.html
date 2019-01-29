@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Document</title>
+        <meta name="keywords" content="关键词">
+        <meta name="description" content="描述">
+        <meta name="凡客007" content="">
+        <style>
+        ul,li,p{
+            margin:0;
+            padding:0;
+        }
+        ul,li{
+            list-style:none;
+        }
+        body{
+        	background-color: #081243;
+        	overflow:hidden;
+        }
+       #wrap{
+       	position:relative;
+       	width:1200px;
+       	height:600px;
+       	margin:auto;
+       	user-select: none;
+       }
+		#box{
+			position:absolute;
+			width:150px;
+			height:200px;
+			left:0;
+			right:0;
+			top:-100px;
+			bottom:0;
+			margin:auto;
+			perspective: 800px;
+		}
+		#box ul{
+			position: relative;
+			width:100%;
+			height:100%;
+			
+			transform-style: preserve-3d;	
+			transform:rotateX(-12deg) rotateY(0deg);
+		}
+		#box ul li{
+			position:absolute;
+			width:100%;
+			height:100%;
+			transform:rotateX(0deg) translateZ(0px);
+			cursor: pointer;
+		}
+		#box ul li img{
+			width:100%;
+			height:100%;
+			border-radius: 5px;
+			box-shadow:0 0 5px #BB6997;
+			transform:rotateY(0deg) translateZ(0px);
+				/*倒影：朝向 偏移 遮盖*//*线性渐变(从哪里开始,开始时候的颜色,结束时候的颜色)*/
+			-webkit-box-reflect:below 5px -webkit-linear-gradient(top,rgba(0,0,0,0) 40%,rgba(0,0,0,0.5) 100%);
+		}
+		#wrap p{
+				width:1200px;
+				height:1200px;
+				background:-webkit-radial-gradient(center center,600px 600px,rgba(244,23,234,0.2),rgba(0,0,0,0));
+				border-radius:100%;
+				position:absolute;
+				left:50%;
+				top:102%;
+				margin-left:-600px;
+				margin-top:-600px;
+				transform:rotateX(90deg);
+			}
+        </style>
+        <script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+</head>
+<body>
+    <div id="wrap">
+    	<div id="box">
+    		<ul>
+    			<li><img src="img/1.jpg" alt=""></li>
+    			<li><img src="img/2.jpg" alt=""></li>
+    			<li><img src="img/3.jpg" alt=""></li>
+    			<li><img src="img/4.jpg" alt=""></li>
+    			<li><img src="img/5.jpg" alt=""></li>
+    			<li><img src="img/6.jpg" alt=""></li>
+    			<li><img src="img/7.jpg" alt=""></li>
+    			<li><img src="img/8.jpg" alt=""></li>
+    			<li><img src="img/9.jpg" alt=""></li>
+    			<li><img src="img/10.jpg" alt=""></li>
+    			<li><img src="img/11.jpg" alt=""></li>
+    		</ul>
+    		<p></p>
+    	</div>
+
+    </div>
+    <script>
+    	window.onload=function(){
+            var aWrap=document.getElementById('wrap'),
+    			oLi=aWrap.getElementsByTagName('li'),
+    			oUl=aWrap.getElementsByTagName('ul')[0],
+    			//ul的当前角度
+    			roY = 0 , roX = -12,
+    			length=oLi.length,
+    			timer,
+                x=1
+    			//定义每个图片平均旋转角度
+    			Deg=360/length;
+               //加载完执行动画
+                fn(x)
+
+    		for (var i = 0; i < length; i++) {
+    			oLi[i].style.transform = 'rotateY('+i*Deg+'deg) translateZ(350px)';
+                //定义开场动画时间
+    			oLi[i].style.transition = 'transform 1.5s '+(length-1-i)*0.1+'s'
+    		};
+    		document.onmousedown=function(e){
+    			e=e||window.event
+                //按下动画终止
+                clearInterval(timer)
+    			lastX=e.clientX;
+    			lastY=e.clientY;
+    			this.onmousemove=function(e) {
+    				e=e||window.event
+    				
+    				//当前鼠标坐标
+    				nowX=e.clientX;
+    				nowY=e.clientY;
+    				//变化值
+    				poorX=nowX-lastX;
+    				poorY=nowY-lastY;
+                    //判断得到x值正负
+                    if (poorX<0) {
+                        x=-1
+                    }else {
+                        x=1
+                    }
+    				//由于变化过快想办法减小变化值
+    				roX-=poorY*0.05;//鼠标的X轴坐标变化会使ulY轴变化
+    				roY+=poorX*0.1;
+    				oUl.style.transform='rotateX('+ roX +'deg) rotateY('+ roY +'deg)';
+    				lastX=nowX;
+    				lastY=nowY;
+    			};
+    			this.onmouseup=function(e){
+    				e=e||window.event
+                    fn(x)
+    				this.onmousemove=null;
+    			}
+    			return false;
+    		}
+
+            function fn(x){
+                timer=setInterval(function(){
+                         roY+=x*0.1;
+                        oUl.style.transform='rotateX('+ roX +'deg) rotateY('+ roY +'deg)';
+                },25)
+            }
+            
+    	};
+    </script>
+</body>
+</html>
